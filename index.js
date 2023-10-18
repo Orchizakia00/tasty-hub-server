@@ -28,7 +28,9 @@ async function run() {
         await client.connect();
 
         const productCollection = client.db('productDB').collection('product');
+        const userCollection = client.db('productDB').collection('user');
 
+        // for products
         // get product
         app.get('/product', async (req, res) => {
             const cursor = productCollection.find();
@@ -69,6 +71,14 @@ async function run() {
                 }
             }
             const result = await productCollection.updateOne(filter, product, options);
+            res.send(result);
+        })
+
+        // for users
+        app.post('/user', async(req, res) => {
+            const user = req.body;
+            console.log(user);
+            const result = await userCollection.insertOne(user);
             res.send(result);
         })
 
