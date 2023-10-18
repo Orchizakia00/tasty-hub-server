@@ -29,6 +29,7 @@ async function run() {
 
         const productCollection = client.db('productDB').collection('product');
         const userCollection = client.db('productDB').collection('user');
+        const cartCollection = client.db('productDB').collection('cart');
 
         // for products
         // get product
@@ -75,10 +76,37 @@ async function run() {
         })
 
         // for users
+        app.get('/user', async (req, res) => {
+            const cursor = userCollection.find();
+            const result = await cursor.toArray();
+            res.send(result);
+        })
+
         app.post('/user', async(req, res) => {
             const user = req.body;
             console.log(user);
             const result = await userCollection.insertOne(user);
+            res.send(result);
+        })
+
+        // for cart
+        app.get('/cart', async (req, res) => {
+            const cursor = cartCollection.find();
+            const result = await cursor.toArray();
+            res.send(result);
+        })
+
+        app.post('/cart', async(req, res) => {
+            const user = req.body;
+            console.log(user);
+            const result = await cartCollection.insertOne(user);
+            res.send(result);
+        })
+
+        app.delete('/cart/:id', async(req, res) => {
+            const id = req.params.id;
+            const query = {_id: new ObjectId(id)};
+            const result = await cartCollection.deleteOne(query);
             res.send(result);
         })
 
